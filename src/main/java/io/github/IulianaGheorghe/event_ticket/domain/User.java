@@ -2,9 +2,7 @@ package io.github.IulianaGheorghe.event_ticket.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
@@ -49,6 +47,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
     private List<Event> staffingEvents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "purchaser", cascade = CascadeType.ALL)
+    private List<Ticket> purchasedTickets = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
