@@ -1,10 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import OrganizerLandingPage from './pages/OrganizerLandingPage.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import DashboardCreateEventPage from "./pages/DashboardCreateEventPage.tsx";
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <OrganizerLandingPage />
-  </StrictMode>,
-)
+    <DashboardCreateEventPage />
+  </StrictMode>
+);

@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 /* Global styles */
 body {
   @apply bg-white text-gray-800 font-sans;
