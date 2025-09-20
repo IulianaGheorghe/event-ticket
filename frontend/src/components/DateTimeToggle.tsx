@@ -17,7 +17,7 @@ const DateTimeToggle = ({
 }: Props) => {
   return (
     <>
-      <label className="flex cursor-pointer select-none items-center">
+      <label className="flex w-fit cursor-pointer select-none items-center">
         <div className="relative">
           <input
             type="checkbox"

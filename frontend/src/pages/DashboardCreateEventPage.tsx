@@ -1,14 +1,13 @@
 import { useState } from "react";
 import FormField from "../components/FormField";
-import InputTextField from "../components/InputTextField";
+import InputField from "../components/InputField";
 import DateTimeToggle from "../components/DateTimeToggle";
 import TextArea from "../components/TextArea";
 import Button from "../components/Button";
 import TicketTypesSection from "../components/TicketTypesSection";
 import Dropdown from "../components/Dropdown";
-import TicketTypeModal from "../components/TicketTypeModal";
 
-interface Ticket {
+export interface Ticket {
   id: number;
   name: string;
   price: number;
@@ -34,6 +33,7 @@ interface FormState {
   status: string;
   tickets: Ticket[];
   modalOpen: boolean;
+  editingTicketId: number;
 }
 
 const DashboardCreateEventPage = () => {
@@ -55,7 +55,12 @@ const DashboardCreateEventPage = () => {
     status: "Draft",
     tickets: [],
     modalOpen: false,
+    editingTicketId: -1,
   });
+
+  const handleSubmit = () => {
+    console.log(form);
+  };
 
   return (
     <>
@@ -70,9 +75,12 @@ const DashboardCreateEventPage = () => {
           label="Event Name"
           helperText="This is the public name of your event."
         >
-          <InputTextField
+          <InputField
+            type="text"
             value={form.eventName}
-            setValue={(val) => setForm((prev) => ({ ...prev, eventName: val }))}
+            setValue={(e) =>
+              setForm((prev) => ({ ...prev, eventName: e.target.value }))
+            }
           />
         </FormField>
         <FormField
@@ -175,18 +183,34 @@ const DashboardCreateEventPage = () => {
           />
         </FormField>
         <TicketTypesSection
-          onAddTicketType={() =>
-            setForm((prev) => ({ ...prev, modalOpen: true }))
-          }
-        />
-        <TicketTypeModal
-          isOpen={form.modalOpen}
-          onClose={() => setForm((prev) => ({ ...prev, modalOpen: false }))}
-          onSave={(ticket: Omit<Ticket, "id">) =>
+          tickets={form.tickets}
+          onRemoveTicket={(id: number) =>
             setForm((prev) => ({
               ...prev,
-              tickets: [...prev.tickets, { id: Date.now(), ...ticket }],
+              tickets: prev.tickets.filter((t) => t.id !== id),
             }))
+          }
+          onSaveTicket={(ticketData) =>
+            "id" in ticketData
+              ? setForm((prev) => ({
+                  ...prev,
+                  tickets: prev.tickets.map((t) =>
+                    t.id === ticketData.id ? { ...t, ...ticketData } : t
+                  ),
+                }))
+              : setForm((prev) => ({
+                  ...prev,
+                  tickets: [
+                    ...prev.tickets,
+                    {
+                      id: Date.now(),
+                      name: ticketData.name,
+                      price: ticketData.price,
+                      total: ticketData.total,
+                      description: ticketData.description,
+                    } as Ticket,
+                  ],
+                }))
           }
         />
         <FormField
@@ -204,7 +228,7 @@ const DashboardCreateEventPage = () => {
             ]}
           />
         </FormField>
-        <Button type="submit" onClick={() => {}}>
+        <Button type="button" onClick={handleSubmit}>
           Submit
         </Button>
       </form>

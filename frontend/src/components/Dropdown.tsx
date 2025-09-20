@@ -9,7 +9,7 @@ const Dropdown = ({ selectedValue, setSelectedValue, options }: Props) => {
     <select
       value={selectedValue}
       onChange={(e) => setSelectedValue(e.target.value)}
-      className="flex bg-gray-800 p-2 rounded-lg border-2 border-gray-400"
+      className="flex bg-gray-800 p-2 rounded-lg border-2 border-gray-600"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
