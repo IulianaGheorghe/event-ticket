@@ -1,13 +1,17 @@
-import React from 'react'
+import { Route, Routes } from "react-router-dom";
+import OrganizerLandingPage from "./pages/OrganizerLandingPage";
+import DashboardCreateEventPage from "./pages/DashboardCreateEventPage";
 
 const App = () => {
   return (
-    <div>
-      <div className='Container bg-red-500'>
-        <h1>Hello tailwind</h1>
-      </div>
-    </div>
-  )
-}
+    <Routes>
+      <Route path="/organizers" element={<OrganizerLandingPage />} />
+      <Route
+        path="/dashboard/create-event"
+        element={<DashboardCreateEventPage />}
+      />
+    </Routes>
+  );
+};
 
-export default App
+export default App;
