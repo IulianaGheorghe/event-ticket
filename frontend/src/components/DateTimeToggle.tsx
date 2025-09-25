@@ -1,3 +1,5 @@
+import * as SwitchPrimitive from "@radix-ui/react-switch";
+
 interface Props {
   enabled: boolean;
   date: string;
@@ -17,20 +19,14 @@ const DateTimeToggle = ({
 }: Props) => {
   return (
     <>
-      <label className="flex w-fit cursor-pointer select-none items-center">
-        <div className="relative">
-          <input
-            type="checkbox"
-            checked={enabled}
-            onChange={onToggle}
-            className="sr-only peer"
-          />
-          {/* Track */}
-          <div className="w-11 h-6 bg-gray-600 rounded-full peer-checked:bg-blue-500 transition duration-300 ease-in-out" />
-          {/* Knob */}
-          <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition duration-300 ease-in-out peer-checked:translate-x-5" />
-        </div>
-      </label>
+      <SwitchPrimitive.Root
+        className="data-[state=checked]:bg-gray-300 data-[state=unchecked]:bg-gray-600 inline-flex h-6 w-11 items-center rounded-full shadow-xs transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 "
+        checked={enabled}
+        onCheckedChange={onToggle}
+      >
+        <SwitchPrimitive.Thumb className="data-[state=checked]:bg-gray-700 data-[state=unchecked]:bg-gray-200 pointer-events-none block size-4 rounded-full transition-transform data-[state=checked]:translate-x-6 data-[state=unchecked]:translate-x-1" />
+      </SwitchPrimitive.Root>
+
       {enabled && (
         <div className="flex gap-2 mt-2">
           <input

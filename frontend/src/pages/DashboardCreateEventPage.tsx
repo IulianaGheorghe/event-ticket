@@ -5,7 +5,7 @@ import DateTimeToggle from "../components/DateTimeToggle";
 import TextArea from "../components/TextArea";
 import Button from "../components/Button";
 import TicketTypesSection from "../components/TicketTypesSection";
-import Dropdown from "../components/Dropdown";
+import SelectButton from "../components/SelectButton";
 
 export interface Ticket {
   id: number;
@@ -52,7 +52,7 @@ const DashboardCreateEventPage = () => {
     eventSalesEndEnabled: false,
     eventSalesEndDate: "",
     eventSalesEndTime: "",
-    status: "Draft",
+    status: "",
     tickets: [],
     modalOpen: false,
     editingTicketId: -1,
@@ -217,7 +217,7 @@ const DashboardCreateEventPage = () => {
           label="Status"
           helperText="Please select the status of the new event."
         >
-          <Dropdown
+          <SelectButton
             selectedValue={form.status}
             setSelectedValue={(val) =>
               setForm((prev) => ({ ...prev, status: val }))
@@ -228,7 +228,7 @@ const DashboardCreateEventPage = () => {
             ]}
           />
         </FormField>
-        <Button type="submit" onClick={handleSubmit}>
+        <Button type="button" onClick={handleSubmit}>
           Submit
         </Button>
       </form>
