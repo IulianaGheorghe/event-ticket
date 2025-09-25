@@ -1,22 +1,37 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import NavBar from "./components/NavBar.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import OrganizerLandingPage from "./pages/OrganizerLandingPage.tsx";
 import DashboardCreateEventPage from "./pages/DashboardCreateEventPage.tsx";
+import { AuthProvider } from "react-oidc-context";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+
+const router = createBrowserRouter([
+  {
+    path: "/organizers",
+    Component: OrganizerLandingPage,
+  },
+  {
+    path: "/dashboard/create-event",
+    element: (
+      <ProtectedRoute>
+        <DashboardCreateEventPage />
+      </ProtectedRoute>
+    ),
+  },
+]);
+
+const oidcConfig = {
+  authority: "http://localhost:9090/realms/event-ticket-platform",
+  client_id: "event-ticket-platform-app",
+  redirect_uri: "http://localhost:5173/callback",
+};
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <NavBar />
-      <Routes>
-        <Route path="/organizers" element={<OrganizerLandingPage />} />
-        <Route
-          path="/dashboard/create-event"
-          element={<DashboardCreateEventPage />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider {...oidcConfig}>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
