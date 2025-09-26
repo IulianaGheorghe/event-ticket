@@ -6,8 +6,13 @@ import OrganizerLandingPage from "./pages/OrganizerLandingPage.tsx";
 import DashboardCreateEventPage from "./pages/DashboardCreateEventPage.tsx";
 import { AuthProvider } from "react-oidc-context";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    Component: LoginPage,
+  },
   {
     path: "/organizers",
     Component: OrganizerLandingPage,
