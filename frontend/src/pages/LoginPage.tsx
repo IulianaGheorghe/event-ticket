@@ -2,16 +2,13 @@ import { useEffect } from "react";
 import { useAuth } from "react-oidc-context";
 
 const LoginPage = () => {
-  const auth = useAuth();
+  const { isLoading, isAuthenticated, signinRedirect } = useAuth();
 
   useEffect(() => {
-    if (auth.isLoading) {
-      return;
+    if (!isLoading && !isAuthenticated) {
+      signinRedirect();
     }
-    if (!auth.isAuthenticated) {
-      auth.signinRedirect();
-    }
-  });
+  }, [isLoading, isAuthenticated, signinRedirect]);
 
   return <div>Redirecting to login...</div>;
 };

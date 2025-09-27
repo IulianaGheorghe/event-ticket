@@ -1,33 +1,32 @@
 import { type ReactNode } from "react";
 import { useAuth } from "react-oidc-context";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProperties {
   children: ReactNode;
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProperties) => {
-  const auth = useAuth();
-  const location = useLocation();
+  const { isLoading, error, isAuthenticated } = useAuth();
 
-  if (auth.isLoading) {
+  if (isLoading) {
     return <div> Loading... </div>;
   }
 
-  if (auth.error) {
+  if (error) {
     return (
       <div>
-        Oops... {auth.error.source} caused {auth.error.message}
+        Oops... {error.source} caused {error.message}
       </div>
     );
   }
 
-  if (!auth.isAuthenticated) {
+  if (!isAuthenticated) {
     localStorage.setItem(
       "redirectPath",
       globalThis.location.pathname + globalThis.location.search
     );
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
