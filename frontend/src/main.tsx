@@ -1,30 +1,42 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import OrganizerLandingPage from "./pages/OrganizerLandingPage.tsx";
 import DashboardCreateEventPage from "./pages/DashboardCreateEventPage.tsx";
 import { AuthProvider } from "react-oidc-context";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import CallbackPage from "./pages/CallbackPage.tsx";
+import NavBar from "./components/NavBar.tsx";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    Component: LoginPage,
-  },
-  {
-    path: "/organizers",
-    Component: OrganizerLandingPage,
-  },
-  {
-    path: "/dashboard/create-event",
+    path: "/",
     element: (
-      <ProtectedRoute>
-        <DashboardCreateEventPage />
-      </ProtectedRoute>
+      <>
+        <NavBar />
+        <Outlet />
+      </>
     ),
+    children: [
+      // { path: "", element: <HomePage /> },
+      {
+        path: "/organizers",
+        Component: OrganizerLandingPage,
+      },
+      {
+        path: "/dashboard/create-event",
+        element: (
+          <ProtectedRoute>
+            <DashboardCreateEventPage />
+          </ProtectedRoute>
+        ),
+      },
+    ],
   },
+  { path: "login", Component: LoginPage },
+  { path: "/callback", Component: CallbackPage },
 ]);
 
 const oidcConfig = {

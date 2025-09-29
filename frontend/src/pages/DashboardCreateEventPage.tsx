@@ -228,7 +228,7 @@ const DashboardCreateEventPage = () => {
             ]}
           />
         </FormField>
-        <Button type="button" onClick={handleSubmit}>
+        <Button type="submit" onClick={handleSubmit}>
           Submit
         </Button>
       </form>

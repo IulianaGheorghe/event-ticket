@@ -8,7 +8,7 @@ export default function OrganizerLandingPage() {
 
   return (
     <>
-      <div className="flex justify-center items-center gap-x-[clamp(0.5rem,7vw,10rem)] min-h-screen p-10 w-[min(100%,80rem)] mx-auto">
+      <div className="flex justify-center items-center gap-x-[clamp(0.5rem,7vw,10rem)] min-h-[calc(100vh-5rem)] p-10 w-[min(100%,80rem)] mx-auto">
         <div className="flex-2/3 space-y-6">
           <h1 className="text-5xl font-bold">
             Create, Manage & Sell Event Tickets with Ease
