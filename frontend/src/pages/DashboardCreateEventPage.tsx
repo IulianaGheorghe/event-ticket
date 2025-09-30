@@ -62,6 +62,10 @@ const DashboardCreateEventPage = () => {
     console.log(form);
   };
 
+  const updateField = (field: keyof FormState, value: any) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
   return (
     <>
       <form className="min-h-screen p-10 w-[min(100%,40rem)] mx-auto space-y-5">
@@ -78,9 +82,7 @@ const DashboardCreateEventPage = () => {
           <InputField
             type="text"
             value={form.eventName}
-            setValue={(e) =>
-              setForm((prev) => ({ ...prev, eventName: e.target.value }))
-            }
+            setValue={(e) => updateField("eventName", e.target.value)}
           />
         </FormField>
         <FormField
@@ -90,19 +92,12 @@ const DashboardCreateEventPage = () => {
           <DateTimeToggle
             enabled={form.eventStartEnabled}
             onToggle={() =>
-              setForm((prev) => ({
-                ...prev,
-                eventStartEnabled: !form.eventStartEnabled,
-              }))
+              updateField("eventStartEnabled", !form.eventStartEnabled)
             }
             date={form.eventStartDate}
             time={form.eventStartTime}
-            onDateChange={(val) =>
-              setForm((prev) => ({ ...prev, eventStartDate: val }))
-            }
-            onTimeChange={(val) =>
-              setForm((prev) => ({ ...prev, eventStartTime: val }))
-            }
+            onDateChange={(val) => updateField("eventStartDate", val)}
+            onTimeChange={(val) => updateField("eventStartTime", val)}
           />
         </FormField>
         <FormField
@@ -119,12 +114,8 @@ const DashboardCreateEventPage = () => {
             }
             date={form.eventEndDate}
             time={form.eventEndTime}
-            onDateChange={(val) =>
-              setForm((prev) => ({ ...prev, eventEndDate: val }))
-            }
-            onTimeChange={(val) =>
-              setForm((prev) => ({ ...prev, eventEndTime: val }))
-            }
+            onDateChange={(val) => updateField("eventEndDate", val)}
+            onTimeChange={(val) => updateField("eventEndTime", val)}
           />
         </FormField>
         <FormField
@@ -133,9 +124,7 @@ const DashboardCreateEventPage = () => {
         >
           <TextArea
             value={form.venueDetails}
-            onChange={(val) =>
-              setForm((prev) => ({ ...prev, venueDetails: val }))
-            }
+            onChange={(val) => updateField("venueDetails", val)}
           />
         </FormField>
         <FormField
@@ -145,19 +134,15 @@ const DashboardCreateEventPage = () => {
           <DateTimeToggle
             enabled={form.eventSalesStartEnabled}
             onToggle={() =>
-              setForm((prev) => ({
-                ...prev,
-                eventSalesStartEnabled: !form.eventSalesStartEnabled,
-              }))
+              updateField(
+                "eventSalesStartEnabled",
+                !form.eventSalesStartEnabled
+              )
             }
             date={form.eventSalesStartDate}
             time={form.eventSalesStartTime}
-            onDateChange={(val) =>
-              setForm((prev) => ({ ...prev, eventSalesStartDate: val }))
-            }
-            onTimeChange={(val) =>
-              setForm((prev) => ({ ...prev, eventSalesStartTime: val }))
-            }
+            onDateChange={(val) => updateField("eventSalesStartDate", val)}
+            onTimeChange={(val) => updateField("eventSalesStartTime", val)}
           />
         </FormField>
         <FormField
@@ -174,12 +159,8 @@ const DashboardCreateEventPage = () => {
             }
             date={form.eventSalesEndDate}
             time={form.eventSalesEndTime}
-            onDateChange={(val) =>
-              setForm((prev) => ({ ...prev, eventSalesEndDate: val }))
-            }
-            onTimeChange={(val) =>
-              setForm((prev) => ({ ...prev, eventSalesEndTime: val }))
-            }
+            onDateChange={(val) => updateField("eventSalesEndDate", val)}
+            onTimeChange={(val) => updateField("eventSalesEndTime", val)}
           />
         </FormField>
         <TicketTypesSection
@@ -219,16 +200,14 @@ const DashboardCreateEventPage = () => {
         >
           <SelectButton
             selectedValue={form.status}
-            setSelectedValue={(val) =>
-              setForm((prev) => ({ ...prev, status: val }))
-            }
+            setSelectedValue={(val) => updateField("status", val)}
             options={[
               { name: "Draft", value: "draft" },
               { name: "Published", value: "published" },
             ]}
           />
         </FormField>
-        <Button type="submit" onClick={handleSubmit}>
+        <Button type="button" onClick={handleSubmit}>
           Submit
         </Button>
       </form>

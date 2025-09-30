@@ -17,7 +17,7 @@ const TicketTypesSection = ({
   onRemoveTicket,
   onSaveTicket,
 }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<Ticket>();
 
   return (
@@ -32,7 +32,7 @@ const TicketTypesSection = ({
               type="button"
               onClick={() => {
                 setEditingTicket(undefined);
-                setIsOpen(true);
+                setIsModalOpen(true);
               }}
             >
               + Add Ticket Type
@@ -61,7 +61,7 @@ const TicketTypesSection = ({
                 type="button"
                 onClick={() => {
                   setEditingTicket(ticket);
-                  setIsOpen(true);
+                  setIsModalOpen(true);
                 }}
                 className="p-3 text-white text-xl font-semibold rounded-xl hover:bg-gray-300 hover:text-gray-900"
               >
@@ -78,10 +78,10 @@ const TicketTypesSection = ({
           </div>
         ))}
       </div>
-      {isOpen && (
+      {isModalOpen && (
         <TicketTypeModal
           editingTicket={editingTicket}
-          onClose={() => setIsOpen(false)}
+          onClose={() => setIsModalOpen(false)}
           onSave={(ticketData) => onSaveTicket(ticketData)}
         />
       )}
