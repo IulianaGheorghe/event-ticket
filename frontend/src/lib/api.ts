@@ -1,4 +1,4 @@
-import { isErrorResponse, type CreateEventRequest } from "../domain/Domain";
+import { isErrorResponse, type CreateEventRequest } from "../domain/domain";
 
 export const createEvent = async (
   accessToken: string,

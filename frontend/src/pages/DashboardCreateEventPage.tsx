@@ -10,8 +10,8 @@ import type {
   CreateEventRequest,
   CreateTicketTypeRequest,
   EventStatusEnum,
-} from "../domain/Domain";
-import { createEvent } from "../lib/API";
+} from "../domain/domain";
+import { createEvent } from "../lib/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import Alert from "../components/Alert";
