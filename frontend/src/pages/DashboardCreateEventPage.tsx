@@ -14,6 +14,7 @@ import type {
 import { createEvent } from "../lib/API";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
+import Alert from "../components/Alert";
 
 export interface Ticket {
   id: number;
@@ -291,6 +292,11 @@ const DashboardCreateEventPage = () => {
             ]}
           />
         </FormField>
+
+        {error && (
+          <Alert title="Error" description={error} variant="destructive" />
+        )}
+
         <Button type="submit">Submit</Button>
       </form>
     </>
