@@ -17,7 +17,7 @@ export type EventStatusEnum = "DRAFT" | "PUBLISHED" | "CANCELLED" | "COMPLETED";
 export interface CreateTicketTypeRequest {
   name: string;
   price: number;
-  description: string;
+  description?: string;
   totalAvailable?: number;
 }
 

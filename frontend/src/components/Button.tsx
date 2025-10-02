@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 interface Props {
   type: "button" | "submit" | "reset";
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const Button = ({ type, children, onClick }: Props) => {

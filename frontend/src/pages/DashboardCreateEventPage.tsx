@@ -6,6 +6,14 @@ import TextArea from "../components/TextArea";
 import Button from "../components/Button";
 import TicketTypesSection from "../components/TicketTypesSection";
 import SelectButton from "../components/SelectButton";
+import type {
+  CreateEventRequest,
+  CreateTicketTypeRequest,
+  EventStatusEnum,
+} from "../domain/Domain";
+import { createEvent } from "../lib/API";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "react-oidc-context";
 
 export interface Ticket {
   id: number;
@@ -30,13 +38,18 @@ interface FormState {
   eventSalesEndEnabled: boolean;
   eventSalesEndDate: string;
   eventSalesEndTime: string;
-  status: string;
+  status: EventStatusEnum;
   tickets: Ticket[];
   modalOpen: boolean;
   editingTicketId: number;
 }
 
 const DashboardCreateEventPage = () => {
+  const { isLoading, user } = useAuth();
+  const navigate = useNavigate();
+
+  const [error, setError] = useState<string | undefined>();
+
   const [form, setForm] = useState<FormState>({
     eventName: "",
     eventStartEnabled: false,
@@ -52,14 +65,82 @@ const DashboardCreateEventPage = () => {
     eventSalesEndEnabled: false,
     eventSalesEndDate: "",
     eventSalesEndTime: "",
-    status: "",
+    status: "DRAFT",
     tickets: [],
     modalOpen: false,
     editingTicketId: -1,
   });
 
-  const handleSubmit = () => {
-    console.log(form);
+  const combineDateTime = (dateStr: string, timeStr: string): Date => {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const [hours, minutes] = timeStr.split(":").map(Number);
+
+    const utcResult = new Date(
+      Date.UTC(year, month - 1, day, hours, minutes, 0, 0) // months are 0-based
+    );
+
+    return utcResult;
+  };
+
+  const handleCreateEventSubmit = async (accessToken: string) => {
+    const ticketTypes: CreateTicketTypeRequest[] = form.tickets.map(
+      (ticketType) => {
+        return {
+          name: ticketType.name,
+          price: ticketType.price,
+          description: ticketType.description,
+          totalAvailable: ticketType.total,
+        };
+      }
+    );
+
+    const request: CreateEventRequest = {
+      name: form.eventName,
+      start:
+        form.eventStartDate && form.eventStartTime
+          ? combineDateTime(form.eventStartDate, form.eventStartTime)
+          : undefined,
+      end:
+        form.eventEndDate && form.eventEndTime
+          ? combineDateTime(form.eventEndDate, form.eventEndTime)
+          : undefined,
+      venue: form.venueDetails,
+      salesStart:
+        form.eventSalesStartDate && form.eventSalesStartTime
+          ? combineDateTime(form.eventSalesStartDate, form.eventSalesStartTime)
+          : undefined,
+      salesEnd:
+        form.eventSalesEndDate && form.eventSalesEndTime
+          ? combineDateTime(form.eventSalesEndDate, form.eventSalesEndTime)
+          : undefined,
+      status: form.status,
+      ticketTypes: ticketTypes,
+    };
+
+    try {
+      await createEvent(accessToken, request);
+      navigate("/organizers");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else if (typeof err === "string") {
+        setError(err);
+      } else {
+        setError("An unknown error occurred");
+      }
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(undefined);
+
+    if (isLoading || !user || !user.access_token) {
+      console.error("User not found!");
+      return;
+    }
+
+    await handleCreateEventSubmit(user.access_token);
   };
 
   const updateField = (field: keyof FormState, value: any) => {
@@ -68,7 +149,10 @@ const DashboardCreateEventPage = () => {
 
   return (
     <>
-      <form className="min-h-screen p-10 w-[min(100%,40rem)] mx-auto space-y-5">
+      <form
+        onSubmit={handleFormSubmit}
+        className="min-h-screen p-10 w-[min(100%,40rem)] mx-auto space-y-5"
+      >
         <div className="mb-10">
           <h1 className="text-4xl font-bold mb-2">Create a New Event</h1>
           <p className="text-lg">
@@ -202,14 +286,12 @@ const DashboardCreateEventPage = () => {
             selectedValue={form.status}
             setSelectedValue={(val) => updateField("status", val)}
             options={[
-              { name: "Draft", value: "draft" },
-              { name: "Published", value: "published" },
+              { name: "Draft", value: "DRAFT" },
+              { name: "Published", value: "PUBLISHED" },
             ]}
           />
         </FormField>
-        <Button type="button" onClick={handleSubmit}>
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </>
   );
