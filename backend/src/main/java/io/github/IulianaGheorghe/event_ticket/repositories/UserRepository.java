@@ -1,6 +1,6 @@
 package io.github.IulianaGheorghe.event_ticket.repositories;
 
-import io.github.IulianaGheorghe.event_ticket.domain.User;
+import io.github.IulianaGheorghe.event_ticket.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

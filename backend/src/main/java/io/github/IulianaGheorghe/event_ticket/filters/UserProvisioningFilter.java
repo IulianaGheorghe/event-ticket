@@ -1,6 +1,6 @@
 package io.github.IulianaGheorghe.event_ticket.filters;
 
-import io.github.IulianaGheorghe.event_ticket.domain.User;
+import io.github.IulianaGheorghe.event_ticket.domain.entities.User;
 import io.github.IulianaGheorghe.event_ticket.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
