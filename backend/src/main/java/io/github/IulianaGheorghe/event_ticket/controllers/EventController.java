@@ -3,6 +3,7 @@ package io.github.IulianaGheorghe.event_ticket.controllers;
 import io.github.IulianaGheorghe.event_ticket.domain.CreateEventRequest;
 import io.github.IulianaGheorghe.event_ticket.domain.dtos.CreateEventRequestDto;
 import io.github.IulianaGheorghe.event_ticket.domain.dtos.CreateEventResponseDto;
+import io.github.IulianaGheorghe.event_ticket.domain.dtos.GetEventDetailsResponseDto;
 import io.github.IulianaGheorghe.event_ticket.domain.dtos.ListEventResponseDto;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.Event;
 import io.github.IulianaGheorghe.event_ticket.mappers.EventMapper;
@@ -55,5 +56,18 @@ public class EventController {
 
     private UUID parseUserId(Jwt jwt) {
         return UUID.fromString(jwt.getSubject());
+    }
+
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<GetEventDetailsResponseDto> getEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+
+    ) {
+        UUID userId = parseUserId(jwt);
+        return eventService.getEventForOrganizer(userId, eventId)
+                .map(eventMapper::toGetEventDetailsResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
