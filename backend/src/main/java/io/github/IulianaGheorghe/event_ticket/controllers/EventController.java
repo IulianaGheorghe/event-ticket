@@ -1,10 +1,8 @@
 package io.github.IulianaGheorghe.event_ticket.controllers;
 
 import io.github.IulianaGheorghe.event_ticket.domain.CreateEventRequest;
-import io.github.IulianaGheorghe.event_ticket.domain.dtos.CreateEventRequestDto;
-import io.github.IulianaGheorghe.event_ticket.domain.dtos.CreateEventResponseDto;
-import io.github.IulianaGheorghe.event_ticket.domain.dtos.GetEventDetailsResponseDto;
-import io.github.IulianaGheorghe.event_ticket.domain.dtos.ListEventResponseDto;
+import io.github.IulianaGheorghe.event_ticket.domain.UpdateEventRequest;
+import io.github.IulianaGheorghe.event_ticket.domain.dtos.*;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.Event;
 import io.github.IulianaGheorghe.event_ticket.mappers.EventMapper;
 import io.github.IulianaGheorghe.event_ticket.services.EventService;
@@ -69,5 +67,20 @@ public class EventController {
                 .map(eventMapper::toGetEventDetailsResponseDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping(path = "/{eventId}")
+    public ResponseEntity<UpdateEventResponseDto> updateEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto
+    ) {
+        UUID userId = parseUserId(jwt);
+        UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+
+        Event updatedEvent = eventService.updateEventForOrganizer(userId, eventId, updateEventRequest);
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updatedEvent);
+
+        return ResponseEntity.ok(updateEventResponseDto);
     }
 }
