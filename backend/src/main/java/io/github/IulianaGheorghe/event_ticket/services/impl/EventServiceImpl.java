@@ -6,9 +6,7 @@ import io.github.IulianaGheorghe.event_ticket.domain.UpdateTicketTypeRequest;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.Event;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.TicketType;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.User;
-import io.github.IulianaGheorghe.event_ticket.exceptions.EventTicketException;
-import io.github.IulianaGheorghe.event_ticket.exceptions.EventUpdateException;
-import io.github.IulianaGheorghe.event_ticket.exceptions.UserNotFoundException;
+import io.github.IulianaGheorghe.event_ticket.exceptions.*;
 import io.github.IulianaGheorghe.event_ticket.repositories.EventRepository;
 import io.github.IulianaGheorghe.event_ticket.repositories.UserRepository;
 import io.github.IulianaGheorghe.event_ticket.services.EventService;
@@ -86,7 +84,7 @@ public class EventServiceImpl implements EventService {
 
         Event existingEvent = eventRepository
                 .findByIdAndOrganizerId(id, organizerId)
-                .orElseThrow(() -> new EventUpdateException(
+                .orElseThrow(() -> new EventNotFoundException(
                         String.format("Event with ID '%s' does not exist", id)
                 ));
 
@@ -129,7 +127,7 @@ public class EventServiceImpl implements EventService {
                 existingTicketType.setDescription(ticketType.getDescription());
                 existingTicketType.setTotalAvailable(ticketType.getTotalAvailable());
             } else {
-                throw new EventTicketException(String.format(
+                throw new TicketTypeNotFoundException(String.format(
                         "Ticket type with ID '%s' does not exist", ticketType.getId()
                 ));
             }
