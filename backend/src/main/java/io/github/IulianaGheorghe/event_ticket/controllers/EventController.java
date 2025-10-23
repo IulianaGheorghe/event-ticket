@@ -52,10 +52,6 @@ public class EventController {
         );
     }
 
-    private UUID parseUserId(Jwt jwt) {
-        return UUID.fromString(jwt.getSubject());
-    }
-
     @GetMapping(path = "/{eventId}")
     public ResponseEntity<GetEventDetailsResponseDto> getEvent(
             @AuthenticationPrincipal Jwt jwt,
@@ -82,5 +78,19 @@ public class EventController {
         UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updatedEvent);
 
         return ResponseEntity.ok(updateEventResponseDto);
+    }
+
+    @DeleteMapping(path = "/{eventId}")
+    public ResponseEntity<Void> deleteEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+    ) {
+        UUID userId = parseUserId(jwt);
+        eventService.deleteEventForOrganizer(userId, eventId);
+        return ResponseEntity.noContent().build();
+    }
+
+    private UUID parseUserId(Jwt jwt) {
+        return UUID.fromString(jwt.getSubject());
     }
 }
