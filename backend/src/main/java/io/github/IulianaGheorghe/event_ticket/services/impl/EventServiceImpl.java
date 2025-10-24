@@ -4,6 +4,7 @@ import io.github.IulianaGheorghe.event_ticket.domain.CreateEventRequest;
 import io.github.IulianaGheorghe.event_ticket.domain.UpdateEventRequest;
 import io.github.IulianaGheorghe.event_ticket.domain.UpdateTicketTypeRequest;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.Event;
+import io.github.IulianaGheorghe.event_ticket.domain.entities.EventStatusEnum;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.TicketType;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.User;
 import io.github.IulianaGheorghe.event_ticket.exceptions.*;
@@ -146,5 +147,10 @@ public class EventServiceImpl implements EventService {
                         String.format("Event with ID '%s' not found for organizer '%s'", id, organizerId)
                 );}
         );
+    }
+
+    @Override
+    public Page<Event> listPublishedEvents(Pageable pageable) {
+        return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
     }
 }
