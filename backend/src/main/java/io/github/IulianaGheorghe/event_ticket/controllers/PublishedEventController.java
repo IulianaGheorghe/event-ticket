@@ -1,5 +1,6 @@
 package io.github.IulianaGheorghe.event_ticket.controllers;
 
+import io.github.IulianaGheorghe.event_ticket.domain.dtos.GetPublishedEventDetailsResponseDto;
 import io.github.IulianaGheorghe.event_ticket.domain.dtos.ListPublishedEventResponseDto;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.Event;
 import io.github.IulianaGheorghe.event_ticket.mappers.EventMapper;
@@ -9,10 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/v1/published-events")
@@ -35,5 +35,15 @@ public class PublishedEventController {
         return ResponseEntity.ok(
                 publishedEvents.map(eventMapper::toListPublishedEventResponseDto)
         );
+    }
+
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<GetPublishedEventDetailsResponseDto> getPublishedEventDetails(
+            @PathVariable UUID eventId
+            ) {
+        return eventService.getPublishedEvent(eventId)
+                .map(eventMapper::toGetPublishedEventDetailsResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
