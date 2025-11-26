@@ -9,9 +9,11 @@ import io.github.IulianaGheorghe.event_ticket.domain.entities.QRCodeStatusEnum;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.QrCode;
 import io.github.IulianaGheorghe.event_ticket.domain.entities.Ticket;
 import io.github.IulianaGheorghe.event_ticket.exceptions.QrCodeGenerationException;
+import io.github.IulianaGheorghe.event_ticket.exceptions.QrCodeNotFoundException;
 import io.github.IulianaGheorghe.event_ticket.repositories.QrCodeRepository;
 import io.github.IulianaGheorghe.event_ticket.services.QrCodeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QrCodeServiceImpl implements QrCodeService {
 
     private static final int QR_HEIGHT = 300;
@@ -46,6 +49,20 @@ public class QrCodeServiceImpl implements QrCodeService {
             return qrCodeRepository.saveAndFlush(qrCode);
         } catch (IOException | WriterException ex) {
             throw new QrCodeGenerationException("Failed to generate QR Code", ex);
+        }
+    }
+
+    @Override
+    public byte[] getQrCodeImageForUserAndTicket(UUID userId, UUID ticketId) {
+        QrCode qrCode = qrCodeRepository.findByTicketIdAndTicketPurchaserId(ticketId, userId)
+                .orElseThrow(() -> new QrCodeNotFoundException(
+                        String.format("QR code for ticket with ID %s does not exist", ticketId)
+                ));
+        try {
+            return Base64.getDecoder().decode(qrCode.getValue());
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid base64 QR code for ticket ID: {}", ticketId, ex);
+            throw new QrCodeNotFoundException();
         }
     }
 
